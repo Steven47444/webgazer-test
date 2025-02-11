@@ -46,15 +46,16 @@
             { id: 7, bottom: '10%', left: '50%' },
             { id: 8, bottom: '10%', right: '15%' }
         ];
+
         points.forEach((point) => {
             const el = document.createElement('div');
             el.classList.add('calibration-point');
             el.dataset.id = point.id;
             el.style.position = 'absolute';
-            el.style.top = point.top || 'auto';
-            el.style.bottom = point.bottom || 'auto';
-            el.style.left = point.left || 'auto';
-            el.style.right = point.right || 'auto';
+            el.style.top = point.top ? `${parseFloat(point.top) / 100 * window.innerHeight}px` : 'auto';
+            el.style.bottom = point.bottom ? `${parseFloat(point.bottom) / 100 * window.innerHeight}px` : 'auto';
+            el.style.left = point.left ? `${parseFloat(point.left) / 100 * window.innerWidth}px` : 'auto';
+            el.style.right = point.right ? `${parseFloat(point.right) / 100 * window.innerWidth}px` : 'auto';
             el.style.width = '20px';
             el.style.height = '20px';
             el.style.backgroundColor = 'red';
@@ -190,6 +191,9 @@
 
         document.getElementById('accuracy-value').textContent = `${accuracy}%`;
         document.getElementById('accuracy-message').style.display = 'block';
+
+        // 重新训练 WebGazer.js 模型
+        webgazer.resume();
     }
 
     // 获取点的位置
