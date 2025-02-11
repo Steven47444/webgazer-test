@@ -1,5 +1,3 @@
-// calibration.js
-
 (function() {
     'use strict';
 
@@ -15,8 +13,8 @@
         container.style.position = 'fixed';
         container.style.top = '0';
         container.style.left = '0';
-        container.style.width = '100vw';
-        container.style.height = '100vh';
+        container.style.width = '100vw'; // 占据整个屏幕宽度
+        container.style.height = '100vh'; // 占据整个屏幕高度
         container.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
         container.style.zIndex = '9999';
         container.style.display = 'none';
@@ -48,7 +46,6 @@
             { id: 7, bottom: '10%', left: '50%' },
             { id: 8, bottom: '10%', right: '15%' }
         ];
-
         points.forEach((point) => {
             const el = document.createElement('div');
             el.classList.add('calibration-point');
@@ -90,7 +87,10 @@
         accuracyMessage.style.color = '#fff';
         accuracyMessage.style.textAlign = 'center';
         accuracyMessage.style.display = 'none';
-        accuracyMessage.innerHTML = `<h2>Your accuracy measure is <span id="accuracy-value">0%</span>.</h2>`;
+        accuracyMessage.innerHTML = `
+            <h2>Your accuracy measure is <span id="accuracy-value">0%</span>.</h2>
+            <button id="close-calibration">关闭校准</button>
+        `;
         container.appendChild(accuracyMessage);
 
         document.body.appendChild(container);
@@ -99,6 +99,11 @@
         document.getElementById('start-calibration').addEventListener('click', () => {
             instructions.style.display = 'none';
             startCalibration();
+        });
+
+        // 关闭校准界面
+        document.getElementById('close-calibration').addEventListener('click', () => {
+            container.style.display = 'none'; // 隐藏校准界面
         });
     }
 
@@ -138,6 +143,9 @@
             point.classList.remove('active');
             point.style.display = 'none';
             point.removeEventListener('click', handlePointClick);
+
+            // 改变按钮颜色
+            changeButtonColor();
 
             // 检查是否完成所有边缘点
             currentPointIndex++;
@@ -198,6 +206,16 @@
         return Math.sqrt(Math.pow(pointA.x - pointB.x, 2) + Math.pow(pointA.y - pointB.y, 2));
     }
 
+    // 改变按钮颜色
+    function changeButtonColor() {
+        const colors = ['#FF5733', '#33FF57', '#3357FF', '#F3FF33', '#FF33F3']; // 颜色列表
+        const button = document.querySelector('#calibration-container button.active');
+        if (button) {
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            button.style.backgroundColor = randomColor;
+        }
+    }
+
     // 初始化校准功能
     createCalibrationUI();
 
@@ -214,10 +232,8 @@
     calibrationButton.style.border = 'none';
     calibrationButton.style.borderRadius = '5px';
     calibrationButton.style.cursor = 'pointer';
-
     calibrationButton.onclick = () => {
         document.getElementById('calibration-container').style.display = 'block';
     };
-
     document.body.appendChild(calibrationButton);
 })();
